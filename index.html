@@ -228,6 +228,7 @@ a{ color: var(--navy-900); }
 
 /* Code panels */
 .code-panel{
+  max-width: 560px;
   background: var(--navy-950); border-radius: 12px; overflow:hidden;
   border: 1px solid rgba(201,154,59,0.28); margin: 16px 0 8px;
   box-shadow: 0 12px 30px -14px rgba(7,24,42,0.45);
@@ -248,16 +249,19 @@ a{ color: var(--navy-900); }
 .copy-btn{
   display:flex; align-items:center; gap:6px; flex-shrink:0;
   font-family: var(--sans); font-weight:600; font-size:12.5px;
-  color: var(--gold-bright); background: rgba(201,154,59,0.12);
-  border: 1px solid rgba(201,154,59,0.45); border-radius:7px;
+  color: var(--navy-950); background: #FFC93C;
+  border: 1px solid #E0A800; border-radius:7px;
   padding: 7px 13px; cursor:pointer; transition: all 150ms ease;
   min-height:32px;
 }
-.copy-btn:hover{ background: rgba(201,154,59,0.22); }
+.copy-btn:hover{ background: #FFBE0B; }
 .copy-btn svg{ width:13px; height:13px; }
-.copy-btn.is-copied{ background: var(--gold); color: var(--navy-950); border-color: var(--gold); }
+.copy-btn .icon-check{ display:none; }
+.copy-btn.is-copied{ background: #22C55E; color: #FFFFFF; border-color: #16A34A; }
+.copy-btn.is-copied .icon-copy{ display:none; }
+.copy-btn.is-copied .icon-check{ display:block; }
 .code-panel__body{
-  max-height: 380px; overflow:auto; font-family: var(--mono); font-size:12.5px; line-height:1.65;
+  max-height: 240px; overflow:auto; font-family: var(--mono); font-size:12.5px; line-height:1.65;
   padding: 12px 0;
 }
 .code-line{ display:flex; padding: 0 16px; white-space:pre; }
@@ -510,7 +514,8 @@ section.divider{ height:1px; background: var(--line); max-width: var(--maxw); ma
               <span class="code-panel__meta">889 lines</span>
             </div>
             <button class="copy-btn" data-copy-target="codeGs">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg class="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
               <span>Copy code</span>
             </button>
           </div>
@@ -1763,11 +1768,11 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
     const targetId = btn.getAttribute('data-copy-target');
     const text = CODE_GS;
     const setCopied = () => {
-      const label = btn.querySelector('span:last-child');
-      const original = label.textContent;
+      const label = btn.querySelector('span');
+      const original = label ? label.textContent : null;
       btn.classList.add('is-copied');
-      label.textContent = 'Copied ✓';
-      setTimeout(() => { btn.classList.remove('is-copied'); label.textContent = original; }, 1800);
+      if (label) label.textContent = 'Copied ✓';
+      setTimeout(() => { btn.classList.remove('is-copied'); if (label) label.textContent = original; }, 1800);
     };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(setCopied).catch(() => fallbackCopy(targetId, setCopied));
