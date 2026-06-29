@@ -969,7 +969,7 @@ section.divider{ height:1px; background: var(--line); max-width: var(--maxw); ma
 <script>
 // Live-fetch Code.gs from GitHub instead of baking it in at build time —
 // edit the file on GitHub and this page picks it up automatically.
-const CODE_GS_RAW_URL = 'https://raw.githubusercontent.com/JCCBusinessSolutions/JCCDUESREMINDER/refs/heads/main/Code.gs';
+const CODE_GS_RAW_URL = 'https://raw.githubusercontent.com/JCCBusinessSolutions/CLIENTPULSE/refs/heads/main/Client%20Pulse%20Generelal%20Code.gs';
 let CODE_GS = null;
 
 function escapeHtmlForCode(str){
@@ -1023,7 +1023,7 @@ loadCodeFromGitHub();
 // last edited — independent of the raw-content fetch above, so one
 // failing doesn't block the other.
 function loadSyncBadge(){
-  const apiUrl = 'https://api.github.com/repos/JCCBusinessSolutions/JCCDUESREMINDER/commits?path=Code.gs&per_page=1';
+  const apiUrl = 'https://api.github.com/repos/JCCBusinessSolutions/CLIENTPULSE/commits?path=' + encodeURIComponent('Client Pulse Generelal Code.gs') + '&per_page=1';
   fetch(apiUrl)
     .then(res => {
       if (!res.ok) throw new Error('HTTP ' + res.status);
