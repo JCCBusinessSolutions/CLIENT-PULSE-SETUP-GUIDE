@@ -443,6 +443,18 @@ a{ color: var(--navy-900); }
 
 section.divider{ height:1px; background: var(--line); max-width: var(--maxw); margin: 0 auto; }
 
+/* Mobile access bonus tip — sits after the success card */
+.mobile-tip{
+  display:flex; gap:18px; align-items:flex-start;
+  background: var(--cream-deep); border: 1.5px dashed var(--gold);
+  border-radius: 16px; padding: 26px 28px; margin-top: 24px;
+}
+.mobile-tip__icon{ font-size:28px; flex-shrink:0; line-height:1; margin-top:2px; }
+.mobile-tip__title{ font-family: var(--serif); font-weight:600; font-size:18px; color: var(--navy-900); margin-bottom:6px; }
+.mobile-tip p{ color: var(--ink-soft); font-size:14.5px; line-height:1.6; margin:0 0 10px; }
+.mobile-tip ol{ margin:0; padding-left:20px; font-size:14.5px; line-height:1.7; color: var(--ink); }
+.mobile-tip ol li{ margin-bottom:4px; }
+
 /* Prerequisites — sits before the numbered step flow */
 .prereq{ max-width: var(--maxw); margin: 0 auto; padding: 38px 28px 8px; }
 .prereq__card{
@@ -902,6 +914,20 @@ section.divider{ height:1px; background: var(--line); max-width: var(--maxw); ma
             <li><span class="tick">✓</span> Re-upload at the start of each month to catch new clients</li>
           </ul>
         </div>
+      </div>
+    </div>
+
+    <div class="mobile-tip">
+      <div class="mobile-tip__icon">📱</div>
+      <div>
+        <div class="mobile-tip__title">Did you know?</div>
+        <p>You can also access Client Pulse from your mobile phone.</p>
+        <ol>
+          <li>Copy the Apps Script Web App URL from <strong>Connection Setup</strong> in Step 4</li>
+          <li>Open the Client Pulse link on your phone's browser and add it to your home screen</li>
+          <li>Log in with your email, go to <strong>Settings</strong>, and paste the Web App URL into Connection Setup</li>
+          <li>Save it and refresh the app — you're all set!</li>
+        </ol>
       </div>
     </div>
 
