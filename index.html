@@ -497,7 +497,7 @@ section.divider{ height:1px; background: var(--line); max-width: var(--maxw); ma
   <svg class="hero__pulse" viewBox="0 0 560 64" preserveAspectRatio="none">
     <path d="M0,32 L130,32 L150,32 L165,10 L182,56 L198,20 L212,32 L560,32" />
   </svg>
-  <p class="hero__desc">Seven short steps to copy the code into your own Google Sheet, approve access, deploy it, connect Client Pulse, and start sending automated dues reminders and birthday greetings — from your own Gmail, on your own data.</p>
+  <p class="hero__desc">Seven short steps to copy the code into your own Google Sheet, approve access, deploy it, connect Client Pulse, and start sending automated dues reminders and birthday greetings — from your own email account, on your own data.</p>
   <div class="hero__chips">
     <div class="chip">⏱ &nbsp;About 8 minutes</div>
     <div class="chip">📄 &nbsp;1 file to paste</div>
@@ -513,11 +513,19 @@ section.divider{ height:1px; background: var(--line); max-width: var(--maxw); ma
   <div class="prereq__card">
     <div class="prereq__eyebrow">Before you begin</div>
     <h2 class="prereq__title">Email &amp; browser setup</h2>
-    <p>Client Pulse needs a dedicated Gmail account to send from, and a browser signed into that same account. Set this up first.</p>
+    <p>Client Pulse needs one email account to run everything from — the Google Sheet, the Apps Script, and the emails clients receive all come from this same account. You can use either your personal Gmail or a company Google Workspace email; just know what each one means before you pick.</p>
+
+    <div class="callout callout--note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+      <div>
+        <strong>Personal Gmail (e.g. yourname@gmail.com):</strong> Fastest to set up — no IT approval needed. Client emails will show your personal address as the sender (your display name still shows, but the underlying address is the @gmail.com one). Good for solo advisors or a quick start.<br><br>
+        <strong>Company email (e.g. yourname@yourcompany.com on Google Workspace):</strong> Emails send from your professional address — looks more official to clients. Requires your company to be on Google Workspace (not just any email provider), and your IT admin may need to approve the Apps Script permissions the first time you authorize. Better if your company already manages email this way.
+      </div>
+    </div>
 
     <div class="substep">
       <span class="substep__index">1</span>
-      <span class="substep__text">Open the personal Gmail you'll use to send client emails. You can create a brand-new Gmail account just for this if you'd rather keep it separate from your main one.</span>
+      <span class="substep__text">Open the Gmail or company email account you've decided to use. If going personal and you'd rather keep it separate from your main inbox, you can create a brand-new Gmail account just for this.</span>
     </div>
     <div class="shot">
       <div class="shot__bar">
@@ -529,7 +537,7 @@ section.divider{ height:1px; background: var(--line); max-width: var(--maxw); ma
 
     <div class="substep">
       <span class="substep__index">2</span>
-      <span class="substep__text">Open Google Chrome and make sure you're signed in with that same Gmail account — this is the account that will run everything in the steps ahead.</span>
+      <span class="substep__text">Open Google Chrome and make sure you're signed in with that same account (Gmail or company email) — this is the account that will run everything in the steps ahead.</span>
     </div>
     <div class="shot shot--wide">
       <div class="shot__bar">
@@ -547,7 +555,7 @@ section.divider{ height:1px; background: var(--line); max-width: var(--maxw); ma
 
     <div class="substep">
       <span class="substep__index">3</span>
-      <span class="substep__text">Open your personal Google Drive using that same account, just to confirm it's connected and ready.</span>
+      <span class="substep__text">Open Google Drive using that same account, just to confirm it's connected and ready.</span>
     </div>
     <div class="shot shot--wide">
       <div class="shot__bar">
@@ -738,7 +746,7 @@ section.divider{ height:1px; background: var(--line); max-width: var(--maxw); ma
 
         <div class="substep">
           <span class="substep__index">1</span>
-          <span class="substep__text">Log in using your personal Gmail.</span>
+          <span class="substep__text">Log in using the same Gmail or company email you set up earlier.</span>
         </div>
         <div class="shot">
           <div class="shot__bar">
@@ -982,7 +990,7 @@ section.divider{ height:1px; background: var(--line); max-width: var(--maxw); ma
 <script>
 // Live-fetch Code.gs from GitHub instead of baking it in at build time —
 // edit the file on GitHub and this page picks it up automatically.
-const CODE_GS_RAW_URL = 'https://raw.githubusercontent.com/JCCBusinessSolutions/CLIENTPULSE/refs/heads/main/Client%20Pulse%20Generelal%20Code.gs';
+const CODE_GS_CONTENTS_API = 'https://api.github.com/repos/JCCBusinessSolutions/CLIENTPULSE/contents/' + encodeURIComponent('Client Pulse Generelal Code.gs');
 let CODE_GS = null;
 
 function escapeHtmlForCode(str){
@@ -1021,12 +1029,17 @@ function loadCodeFromGitHub(){
   document.getElementById('codeGsMeta').textContent = 'syncing\u2026';
   document.getElementById('codeGsBody').innerHTML =
     '<div class="code-loading"><div class="code-loading__spinner"></div><div class="code-loading__text">Fetching the latest code from GitHub\u2026</div></div>';
-  fetch(CODE_GS_RAW_URL)
+  fetch(CODE_GS_CONTENTS_API, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
     .then(res => {
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.text();
+      return res.json();
     })
-    .then(renderCodeIntoPanel)
+    .then(data => {
+      if (!data.content) throw new Error('no content');
+      // GitHub Contents API returns base64-encoded content with newlines every 60 chars
+      const raw = atob(data.content.replace(/\n/g, ''));
+      renderCodeIntoPanel(raw);
+    })
     .catch(renderCodeError);
 }
 
